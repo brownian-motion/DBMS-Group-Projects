@@ -10,3 +10,5 @@
 out/
 config.toml
 target/
+.idea/dataSources.local.xml
+.idea/dataSources.xml

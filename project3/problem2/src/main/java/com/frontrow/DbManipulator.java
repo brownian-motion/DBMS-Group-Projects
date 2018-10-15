@@ -41,11 +41,12 @@ class DbManipulator
 	}
 
 
-	void addNewProblem(int pid, String pname, int aid, final PrintStream out) throws SQLException
+	void addNewProblem(int pid, String pname, int aid) throws SQLException
 	{
-		try {
-			Statement statement = connection.createStatement(); 
-			ResultSet problems = statement.executeQuery(String.format("EXEC option_1 @pid = %d, @pname = %s, @aid = %d", pid, pname, aid));
+		try (Connection connection = getDbConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.execute(String.format("EXEC option_1 @pid = %d, @pname = '%s', @aid = %d", pid, pname, aid));
 		}
 	}
 

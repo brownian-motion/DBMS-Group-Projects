@@ -157,15 +157,16 @@ CREATE PROCEDURE option_1
     @pname varchar(50),
     @aid INT
 AS
-    BEGIN
-    IF EXISTS( SELECT aid from Problem where aid = @aid), 
-        SELECT ROUND(avg(max_score) * 1.1) INTO @max_score FROM Problems WHERE aid = @aid;
-    ELSE 
-        SELECT ROUND(avg(max_score)) INTO @max_score FROM Problems;
+  BEGIN
+    DECLARE @maxscore INT;
+    IF EXISTS( SELECT aid from Problem where aid = @aid)
+      SET @maxscore = (SELECT ROUND(avg(max_score) * 1.1, 0) FROM Problem WHERE aid = @aid);
+    ELSE
+      SET @maxscore = (SELECT ROUND(avg(max_score), 0) FROM Problem);
 
 
-    INSERT INTO Problem(pid, pname, max_score, aid) VALUES (@pid, @pname, @max_score, @aid);
-END 
+    INSERT INTO Problem(pid, pname, max_score, aid) VALUES (@pid, @pname, @maxscore, @aid);
+  END
 
 /* Option 2 */
 CREATE PROCEDURE Give_Author_Raise

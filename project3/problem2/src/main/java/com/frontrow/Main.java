@@ -124,20 +124,38 @@ public class Main
 		System.err.println("\tfrom the program's config.toml resource in " + Main.class.getPackage());
 	}
 
-	private static void addNewProblem()
+	private static void addNewProblem() throws SQLException
 	{
-		Integer pid;
-		Integer aid;
+		int pid;
+		int aid;
 		String pname;
 		Scanner in = new Scanner(System.in);
-		
+
+		System.out.println("Creating a new problem.");
+
 		// Get the pid from the user
-		System.out.printf("Please enter a number for the problem ID");
+		System.out.print("Please enter a number for the problem ID: ");
+		pid = getNumber(in);
+
+		// Get the pname from the user
+		System.out.print("Please enter a problem name: ");
+		pname = in.nextLine().trim();
+		
+		// Get the author id from the user
+		System.out.print("Please enter the author ID: ");
+		aid = getNumber(in);
+		db.addNewProblem(pid, pname, aid);
+	}
+
+	private static int getNumber(final Scanner in)
+	{
+		int pid;
 		while(true)
 		{
 			try
 			{
 				pid = in.nextInt();
+				in.nextLine(); // clear input to the next line, after the user hits enter
 				break;
 			}
 			catch (InputMismatchException e)
@@ -145,27 +163,9 @@ public class Main
 				System.err.println("Not a valid number.");
 			}
 		}
-		
-		// Get the pname from the user
-		System.out.printf("Please enter a problem name");
-		pname = in.next();
-		
-		// Get the author id from the user
-		System.out.printf("Please enter the author ID");
-		while(true)
-		{
-			try
-			{
-				aid = in.nextInt();
-				break;
-			}
-			catch (InputMismatchException e)
-			{
-				System.err.println("Not a valid number.");
-			}
-		}
-		db.addNewProblem(pid, aid, pname, System.err);
+		return pid;
 	}
+
 	private static int getIntegerInRange(final int min, final int max)
 	{
 		Scanner in = new Scanner(System.in);
