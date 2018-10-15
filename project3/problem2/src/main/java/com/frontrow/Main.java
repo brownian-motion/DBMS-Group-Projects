@@ -92,7 +92,7 @@ public class Main
 						
 						break;
 					case 2:
-						db.giveRaiseToAuthor(System.err);
+						giveRaiseToAuthor();
 						break;
 					case 3:
 						db.displayProblemsAndAuthors(System.out);
@@ -111,7 +111,17 @@ public class Main
 			}
 		}
 	}
-	
+
+	private static void giveRaiseToAuthor() throws SQLException
+	{
+		System.out.println("Giving a raise to an author.");
+
+		System.out.print("Please enter the author ID: ");
+		int aid = getNumber(new Scanner(System.in));
+
+		db.giveRaiseToAuthor(aid, System.out);
+	}
+
 	// Print out information about the utilisation of this program
 	private static void printHelp()
 	{

@@ -50,9 +50,13 @@ class DbManipulator
 		}
 	}
 
-	void giveRaiseToAuthor(final PrintStream out) throws SQLException
+	void giveRaiseToAuthor(int aid, final PrintStream out) throws SQLException
 	{
-		out.println("TODO: Giving raise to author"); // todo: implement this
+		try (Connection connection = getDbConnection())
+		{
+			Statement statement = connection.createStatement();
+			statement.execute(String.format("EXEC Give_Author_Raise @aid=%d", aid));
+		}
 	}
 
 	void displayProblemsAndAuthors(final PrintStream out) throws SQLException
@@ -82,7 +86,7 @@ class DbManipulator
 
 		{ // column names
 			StringJoiner joiner = new StringJoiner(", ");
-			for (int i = 1; i < numCols; i++)
+			for (int i = 1; i <= numCols; i++)
 			{
 				joiner.add(metaData.getColumnName(i));
 			}
@@ -92,7 +96,7 @@ class DbManipulator
 		while (resultSet.next())
 		{
 			StringJoiner joiner = new StringJoiner(", ");
-			for (int i = 1; i < numCols; i++)
+			for (int i = 1; i <= numCols; i++)
 			{
 				joiner.add(resultSet.getString(i));
 			}
