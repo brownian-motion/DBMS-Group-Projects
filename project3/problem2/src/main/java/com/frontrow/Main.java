@@ -124,6 +124,30 @@ public class Main
 		System.err.println("\tfrom the program's config.toml resource in " + Main.class.getPackage());
 	}
 
+	private static void giveRaiseToAuthor()
+	{
+		Integer aid;
+		Scanner in = new Scanner(System.in);
+		// Get the author ID from the user
+		System.out.printf("Please enter the author ID");
+		while(true)
+		{
+			try
+			{
+				// Get an integer as the author ID
+				aid = in.nextInt();
+				break;
+			}
+			// If the input is not an integer, tell the user
+			catch (InputMismatchException e)
+			{
+				System.err.println("Not a valid number.");
+			}
+		}
+		db.giveRaiseToAuthor(aid, System.err);
+		
+	}
+	
 	private static void addNewProblem()
 	{
 		Integer pid;

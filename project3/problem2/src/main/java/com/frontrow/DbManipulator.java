@@ -45,13 +45,16 @@ class DbManipulator
 	{
 		try {
 			Statement statement = connection.createStatement(); 
-			ResultSet problems = statement.executeQuery(String.format("EXEC option_1 @pid = %d, @pname = %s, @aid = %d", pid, pname, aid));
+			statement.executeQuery(String.format("EXEC option_1 @pid = %d, @pname = %s, @aid = %d", pid, pname, aid));
 		}
 	}
 
-	void giveRaiseToAuthor(final PrintStream out) throws SQLException
+	void giveRaiseToAuthor(int aid, final PrintStream out) throws SQLException
 	{
-		out.println("TODO: Giving raise to author"); // todo: implement this
+		try {
+			Statement statement = connection.createStatement();
+			statement.executeQuery(String.format("EXEC give_author_raise @aid = %d", aid
+		}
 	}
 
 	void displayProblemsAndAuthors(final PrintStream out) throws SQLException
