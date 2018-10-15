@@ -10,12 +10,15 @@ import java.util.TreeMap;
 public class Main
 {
 
+	// Map option numbers to their descriptions
 	private static final TreeMap<Integer, String> mainMenuOptionDescriptions = new TreeMap<>();
-
+	
+	// Object that executes the database queries
 	private static DbManipulator db;
 
 	static
 	{
+		// Define each option number and its description
 		mainMenuOptionDescriptions.put(1, "Add a new problem for an author, with auto-computed Max_score");
 		mainMenuOptionDescriptions.put(2, "Give a raise to a problem author");
 		mainMenuOptionDescriptions.put(3, "Display information about the stored problems and authors");
@@ -33,17 +36,19 @@ public class Main
 	{
 		for (String arg : args)
 		{
+			// If the user wants help, display helpful information without executing the rest of the program
 			if (arg.equalsIgnoreCase("--help") || arg.equalsIgnoreCase("-h") || arg.equals("/?") /* windows */)
 			{
 				printHelp();
 				System.exit(1);
 			}
+			// If the user doesn't want help, try to initialize the database manipulator using a command line argument
 			else
 			{
 				db = new DbManipulator(arg);
 			}
 		}
-
+		// If the database manipulator didn't initialize, use the default database to initialize the database manipulator
 		if (db == null)
 		{
 			try
@@ -57,6 +62,7 @@ public class Main
 
 				db = new DbManipulator(jbdc);
 			}
+			// If there was a problem getting the default config settings, tell the user
 			catch (URISyntaxException e)
 			{
 				throw new RuntimeException("Could not load the config.toml resource in the package " + Main.class.getPackage(), e);
@@ -64,19 +70,25 @@ public class Main
 		}
 	}
 
+	// The main loop of functionality 
 	private static void enterOptionLoop()
 	{
 		while (true)
 		{
+			// Display the options the user can choose
 			printOptions(mainMenuOptionDescriptions);
+			
+			// Get the user's choice
 			int input = getIntegerInRange(1, 4);
 
 			try
 			{
-
+				// Based on the user's option choice, do different things
 				switch (input)
 				{
 					case 1:
+						// Get pid, pname, aid from user input
+						
 						db.addNewProblem(System.err);
 						break;
 					case 2:
@@ -91,6 +103,7 @@ public class Main
 						System.err.printf("Unknown option selected: %d%nPlease enter an integer value from 1 to 4.%n", input);
 				}
 			}
+			// If an error is encountered, display information about the error
 			catch (SQLException e)
 			{
 				System.err.println("SQL error encountered:");
@@ -98,7 +111,8 @@ public class Main
 			}
 		}
 	}
-
+	
+	// Print out information about the utilisation of this program
 	private static void printHelp()
 	{
 		System.err.println("Manipulates a database of competition problems and their authors.");
@@ -110,6 +124,47 @@ public class Main
 		System.err.println("\tfrom the program's config.toml resource in " + Main.class.getPackage());
 	}
 
+	private static void addNewProblem()
+	{
+		Integer pid;
+		Integer aid;
+		String pname;
+		Scanner in = new Scanner(System.in);
+		
+		// Get the pid from the user
+		System.out.printf("Please enter a number for the problem ID");
+		while(true)
+		{
+			try
+			{
+				pid = in.nextInt();
+				break;
+			}
+			catch (InputMismatchException e)
+			{
+				System.err.println("Not a valid number.");
+			}
+		}
+		
+		// Get the pname from the user
+		System.out.printf("Please enter a problem name");
+		pname = in.next();
+		
+		// Get the author id from the user
+		System.out.printf("Please enter the author ID");
+		while(true)
+		{
+			try
+			{
+				aid = in.nextInt();
+				break;
+			}
+			catch (InputMismatchException e)
+			{
+				System.err.println("Not a valid number.");
+			}
+		}
+	}
 	private static int getIntegerInRange(final int min, final int max)
 	{
 		Scanner in = new Scanner(System.in);
@@ -126,7 +181,8 @@ public class Main
 			}
 		}
 	}
-
+	
+	// Display the list of possible options that this program can perform
 	private static <K, V> void printOptions(TreeMap<K, V> options)
 	{
 		System.out.println("Please select an option:");
